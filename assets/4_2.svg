@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="316" height="323" viewBox="0 0 316 323">
+    <g transform="translate(-33 -101)">
+        <circle fill="#ff616e" opacity="0.1" cx="114.5" cy="114.5" r="114.5"
+            transform="translate(33 101)" />
+        <circle fill="#e2f5ed" cx="94" cy="94" r="94" transform="translate(161 236)" />
+        <circle fill="#e2f5ed" opacity="0.3" cx="29.5" cy="29.5" r="29.5"
+            transform="translate(49 360)" />
+        <circle fill="#ff616e" cx="13" cy="13" r="13" transform="translate(311 171)" />
+    </g>
+</svg>
+  
