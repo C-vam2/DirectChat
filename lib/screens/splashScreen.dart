@@ -3,12 +3,13 @@ import 'package:flutter_application_1/clippers/topDiagonal.dart';
 import 'package:flutter_application_1/screens/myTabsScreen.dart';
 import 'package:flutter_application_1/screens/onboardingScreens/onBoardingMain.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../clippers/bottomDiagonal.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   final bool onBoarding;
-  const SplashScreen({super.key, required this.onBoarding});
+  SharedPreferences prefs;
+  SplashScreen({super.key, required this.onBoarding, required this.prefs});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -26,8 +27,13 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(milliseconds: 1500));
     // ignore: use_build_context_synchronously
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (cnx) =>
-            widget.onBoarding == false ? OnboardingScreen() : MyTabs()));
+        builder: (cnx) => widget.onBoarding == false
+            ? OnboardingScreen(
+                prefs: widget.prefs,
+              )
+            : MyTabs(
+                prefs: widget.prefs,
+              )));
   }
 
   @override
@@ -63,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
               children: [
                 SvgPicture.asset("assets/splashLogo.svg"),
                 Text(
-                  AppLocalizations.of(context)!.directMessage,
+                  "Direct Message",
                   style: TextStyle(
                       fontFamily: "Helvetica-Neue",
                       fontSize: 28,

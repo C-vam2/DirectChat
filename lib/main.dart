@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/onboardingScreens/onBoardingMain.dart';
+import 'package:flutter_application_1/providers/localeProvider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'screens/splashScreen.dart';
 import 'package:flutter/services.dart';
@@ -12,16 +13,22 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
   final onBoarding = prefs.getBool("onBoarding") ?? false;
-  runApp(MyApp(
-    onboarding: onBoarding,
-  ));
+  runApp(ProviderScope(child: MyApp(onboarding: onBoarding, prefs: prefs)));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerStatefulWidget {
   final bool onboarding;
-  const MyApp({super.key, this.onboarding = false});
+  final SharedPreferences prefs;
+  const MyApp({super.key, this.onboarding = false, required this.prefs});
 
-  Locale _resolveLocale(Locale locale, Iterable<Locale> supportedLocales) {
+  @override
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  Locale _resolveLocale(
+      Locale locale, Iterable<Locale> supportedLocales, bool lang) {
+    // print(lang);
     Locale res = Locale("Dummy");
     for (var supportedLocale in supportedLocales) {
       if ((supportedLocale.languageCode == locale.languageCode)) {
@@ -35,7 +42,23 @@ class MyApp extends StatelessWidget {
     }
 
     if (res.languageCode != 'Dummy') {
-      return res;
+      widget.prefs.setString('secondLocale', res.languageCode);
+      if (widget.prefs.containsKey('lang')) {
+        if (widget.prefs.getBool('lang') == false) {
+          return const Locale('en');
+        } else {
+          return res;
+        }
+      } else {
+        return const Locale('en');
+      }
+    }
+
+    widget.prefs.setString('secondLocale', 'en');
+    if (widget.prefs.containsKey('lang')) {
+      if (widget.prefs.getBool('lang')!) {
+        return Locale(widget.prefs.getString('secondLocale')!);
+      }
     }
 
     return const Locale('en');
@@ -43,6 +66,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lang = ref.watch(localeProvider);
     return MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
@@ -50,8 +74,9 @@ class MyApp extends StatelessWidget {
           View.of(context).platformDispatcher.locale.countryCode),
       debugShowCheckedModeBanner: false,
       localeResolutionCallback: (locale, supportedLocales) {
-        return _resolveLocale(locale!, supportedLocales);
+        return _resolveLocale(locale!, supportedLocales, lang);
       },
+
       theme: ThemeData(
         primaryColor: const Color(0xff259164),
         colorScheme: ColorScheme.fromSwatch().copyWith(
@@ -62,7 +87,7 @@ class MyApp extends StatelessWidget {
         unselectedWidgetColor: const Color(0xff259164),
       ),
 
-      home: SplashScreen(onBoarding: onboarding),
+      home: SplashScreen(onBoarding: widget.onboarding, prefs: widget.prefs),
       // home: OnboardingScreen(),
     );
   }

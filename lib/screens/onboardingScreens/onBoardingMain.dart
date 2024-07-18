@@ -10,7 +10,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OnboardingScreen extends StatefulWidget {
   var isRevisit;
-  OnboardingScreen({super.key, this.isRevisit = false});
+  SharedPreferences prefs;
+  OnboardingScreen({super.key, this.isRevisit = false, required this.prefs});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -131,7 +132,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   pres.setBool("onBoarding", true);
                   if (!mounted) return;
                   Navigator.pushReplacement(
-                      context, MaterialPageRoute(builder: (ctx) => MyTabs()));
+                      context,
+                      MaterialPageRoute(
+                          builder: (ctx) => MyTabs(prefs: widget.prefs)));
                 } else {
                   _controller.nextPage(
                       duration: const Duration(milliseconds: 200),
