@@ -1,4 +1,4 @@
-# flutter_application_1
+# Direct Chat
 
 A new Flutter project.
 
