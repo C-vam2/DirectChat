@@ -1,16 +1,3 @@
 # Direct Chat
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Direct Message for WhatsApp is a full-stack Flutter app that allows users to send WhatsApp messages without saving contacts. Built with Flutter and SQLite, the app uses Riverpod for state management and stores message data locally. The project also includes SQLite integration for efficient local database management.
